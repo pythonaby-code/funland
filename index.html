@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FunLand — Сезон 2</title>
+<meta name="description" content="FunLand — новогодний сезон Minecraft-сервера: приваты и рейды, кланы, аирдропы, босс Снежный Король. Версии 1.16.5–1.21.11.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@600;800&family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #070d1c; --bg2: #0d1730; --card: #111d3a; --line: #22335e;
+    --ice: #7fd8ff; --ice2: #bfeeff; --text: #e8f3ff; --muted: #9fb3d6; --red: #ff5d6c; --gold: #ffd36b;
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.6 Manrope, system-ui, sans-serif; overflow-x: hidden; }
+  a { color: var(--ice); }
+  #snow { position: fixed; inset: 0; pointer-events: none; z-index: 0; }
+  main { position: relative; z-index: 1; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 16px; }
+
+  header.hero { min-height: 92vh; display: grid; place-items: center; text-align: center; padding: 64px 0 32px;
+    background: linear-gradient(180deg, #0a1530 0%, #0a153000 45%, var(--bg) 100%), url(img/spawn.png) center 78% / min(1000px, 140%) no-repeat,
+      radial-gradient(1200px 600px at 50% 0%, #1b3b7a55, transparent 70%), linear-gradient(#0a1530, var(--bg));
+    image-rendering: pixelated; }
+  header.hero .wrap { background: #070d1ccc; border-radius: 28px; padding: 28px 16px; backdrop-filter: blur(6px); }
+  .kicker { letter-spacing: .3em; text-transform: uppercase; color: var(--ice); font-weight: 700; font-size: 13px; }
+  h1 { font: 800 clamp(48px, 10vw, 112px)/1 Unbounded, sans-serif; margin: 12px 0 8px; letter-spacing: -.02em;
+    background: linear-gradient(180deg, #fff, var(--ice2) 55%, var(--ice)); -webkit-background-clip: text; background-clip: text; color: transparent;
+    text-shadow: 0 0 60px #7fd8ff33; }
+  .sub { font-size: clamp(18px, 2.4vw, 22px); color: var(--muted); max-width: 640px; margin: 0 auto 28px; }
+  .addr { display: inline-flex; gap: 10px; align-items: center; flex-wrap: wrap; justify-content: center;
+    background: #0e1a36; border: 1px solid var(--line); border-radius: 14px; padding: 10px 10px 10px 18px; }
+  .addr code { font: 700 clamp(15px, 2.6vw, 20px) Manrope, monospace; color: #fff; word-break: break-all; }
+  button.copy { border: 0; border-radius: 10px; padding: 10px 16px; font: 700 15px Manrope; cursor: pointer;
+    background: var(--ice); color: #06122a; }
+  button.copy:active { transform: translateY(1px); }
+  .versions { margin-top: 14px; color: var(--muted); font-size: 14px; }
+  .live { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin-top: 32px; }
+  .pill { background: #0e1a36cc; border: 1px solid var(--line); border-radius: 999px; padding: 8px 16px; font-weight: 600; font-size: 15px; }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #5b6b8c; margin-right: 8px; vertical-align: 1px; }
+  .dot.on { background: #4dff9a; box-shadow: 0 0 10px #4dff9a; }
+
+  section { padding: 72px 0; }
+  h2 { font: 800 clamp(28px, 4.6vw, 44px)/1.1 Unbounded, sans-serif; margin: 0 0 8px; }
+  .lead { color: var(--muted); margin: 0 0 32px; max-width: 680px; }
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+  .card { background: linear-gradient(180deg, var(--card), #0c1631); border: 1px solid var(--line); border-radius: 18px; padding: 22px; }
+  .card h3 { margin: 10px 0 6px; font-size: 19px; }
+  .card p { margin: 0; color: var(--muted); font-size: 15px; }
+  .ico { width: 48px; height: 48px; image-rendering: pixelated; }
+  .shot { width: 100%; border-radius: 18px; border: 1px solid var(--line); background: #050a16; image-rendering: pixelated; display: block; }
+  .two { display: grid; gap: 24px; grid-template-columns: 1.2fr 1fr; align-items: center; }
+  @media (max-width: 800px) { .two { grid-template-columns: 1fr; } }
+  ul.ticks { list-style: none; padding: 0; margin: 0; }
+  ul.ticks li { padding: 8px 0 8px 30px; position: relative; border-bottom: 1px solid #ffffff0d; }
+  ul.ticks li::before { content: "❄"; position: absolute; left: 4px; color: var(--ice); }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  td, th { text-align: left; padding: 10px 8px; border-bottom: 1px solid #ffffff10; }
+  th { color: var(--muted); font-weight: 600; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
+  .num { font-variant-numeric: tabular-nums; text-align: right; }
+  .steps { counter-reset: s; display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .step { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px; counter-increment: s; }
+  .step::before { content: counter(s); display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 10px;
+    background: var(--ice); color: #06122a; font: 800 17px Unbounded; margin-bottom: 10px; }
+  footer { padding: 40px 0 60px; color: var(--muted); font-size: 14px; text-align: center; }
+  .empty { color: var(--muted); font-size: 15px; }
+</style>
+</head>
+<body>
+<canvas id="snow"></canvas>
+<main>
+  <header class="hero">
+    <div class="wrap">
+      <div class="kicker">Minecraft-сервер · Сезон 2</div>
+      <h1>FunLand ❄</h1>
+      <p class="sub">Новогодняя анархия с приватами. Строй дом, собирай клан, лови подарки с неба и бей Снежного Короля.</p>
+      <div class="addr"><code id="ip">gameboy-luv.tun.ply.gg:23112</code><button class="copy" id="copy">Скопировать адрес</button></div>
+      <div class="versions">Заходи с любой версии от <b>1.16.5</b> до <b>1.21.11</b> · можно без лицензии</div>
+      <div class="live">
+        <span class="pill"><span class="dot" id="dot"></span><span id="online">Узнаю, кто в игре…</span></span>
+        <span class="pill" id="next">⏳ …</span>
+        <span class="pill" id="ny">🎄 …</span>
+      </div>
+    </div>
+  </header>
+
+  <section>
+    <div class="wrap two">
+      <div>
+        <h2>Новогодний спавн</h2>
+        <p class="lead">Остров в снегопаде: ёлка до неба, восемь лавок с жителями, каток, ледяной портал в дикий мир, арена босса и PvP-арена для турниров.</p>
+        <ul class="ticks">
+          <li>Снег идёт всегда, гирлянды горят круглые сутки</li>
+          <li>Жители: магазин, скупщик, аукцион, кланы, события, подарки</li>
+          <li>Меню всего сервера: <b>/menu</b> или <b>Shift+F</b></li>
+        </ul>
+      </div>
+      <img class="shot" src="img/spawn.png" alt="Новогодний спавн FunLand сверху">
+    </div>
+  </section>
+
+  <section style="background:var(--bg2)">
+    <div class="wrap">
+      <h2>Что нового в сезоне</h2>
+      <p class="lead">Всё работает на любой версии клиента: свои предметы приезжают текстурами, пак ставится сам.</p>
+      <div class="grid">
+        <div class="card"><img class="ico" src="img/private_small.png" alt=""><h3>Приваты</h3><p>Поставь блок привата — вокруг станет защищённый квадрат во всю высоту мира. Друзей пускаешь сам.</p></div>
+        <div class="card"><img class="ico" src="img/raid_tnt.png" alt=""><h3>Рейды</h3><p>Чужой приват берёт только «Динамит рейдера»: он отнимает прочность у блока привата. Тяжёлый пробивает и обсидиан.</p></div>
+        <div class="card"><img class="ico" src="img/private_large.png" alt=""><h3>Кланы</h3><p>Тег в чате и над головой, общий сундук, дом клана, свой чат. Соклановцы друг друга не ранят.</p></div>
+        <div class="card"><img class="ico" src="img/gift_common.png" alt=""><h3>Живая экономика</h3><p>Деньги с нуля: скупщик ресурсов, аукцион между игроками, магазин и подарок каждый день. В декабре — адвент-календарь.</p></div>
+        <div class="card"><img class="ico" src="img/gift_epic.png" alt=""><h3>Аирдропы</h3><p>Сани Деда Мороза роняют сундук с добычей. Координаты приходят в чат — кто первый добежал, тот и взял.</p></div>
+        <div class="card"><img class="ico" src="img/heavy_tnt.png" alt=""><h3>Захват маяка</h3><p>Встань в круг и держи его дольше всех. Клан вместе — одна сторона. Награда и +10 очков клану.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap two">
+      <img class="shot" src="img/boss.png" alt="Ледяная арена босса">
+      <div>
+        <h2>Снежный Король</h2>
+        <p class="lead">Мировой босс на ледяной арене спавна. Залпы снежков, вьюга, слуги и удар о землю. Награда — по доле урона, лучшему достаётся легендарка.</p>
+        <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+          <div class="card" style="text-align:center"><img class="ico" src="img/frost_axe.png" alt=""><h3 style="font-size:15px">Топор Стужи</h3><p>замедляет</p></div>
+          <div class="card" style="text-align:center"><img class="ico" src="img/drill_pick.png" alt=""><h3 style="font-size:15px">Бур Полярника</h3><p>копает 3×3</p></div>
+          <div class="card" style="text-align:center"><img class="ico" src="img/blizzard_staff.png" alt=""><h3 style="font-size:15px">Посох Метели</h3><p>ледяные осколки</p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--bg2)">
+    <div class="wrap">
+      <h2>Лучшие</h2>
+      <p class="lead">Обновляется само каждые пару минут, пока сервер работает.</p>
+      <div class="grid">
+        <div class="card"><h3>Кланы</h3><table><thead><tr><th>Клан</th><th class="num">Очки</th></tr></thead><tbody id="clans"><tr><td class="empty" colspan="2">Пока пусто — стань первым</td></tr></tbody></table></div>
+        <div class="card"><h3>Охотники</h3><table><thead><tr><th>Игрок</th><th class="num">Убийства</th></tr></thead><tbody id="killers"><tr><td class="empty" colspan="2">Пока пусто</td></tr></tbody></table></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <h2>Как зайти</h2>
+      <div class="steps">
+        <div class="step"><b>Запусти Minecraft</b><br><span style="color:var(--muted)">Любая версия от 1.16.5 до 1.21.11.</span></div>
+        <div class="step"><b>Добавь сервер</b><br><span style="color:var(--muted)">Сетевая игра → Добавить → вставь адрес сверху.</span></div>
+        <div class="step"><b>Прими ресурспак</b><br><span style="color:var(--muted)">Он маленький: с ним видны новые предметы и скины.</span></div>
+        <div class="step"><b>Зарегистрируйся</b><br><span style="color:var(--muted)"><code>/register пароль пароль</code>, потом жми Shift+F.</span></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>FunLand ❄ Сезон 2 · с Новым годом!</footer>
+</main>
+<script>
+  // Адрес — в буфер.
+  document.getElementById('copy').onclick = async () => {
+    const b = document.getElementById('copy');
+    try { await navigator.clipboard.writeText(document.getElementById('ip').textContent); b.textContent = 'Скопировано ✓'; }
+    catch { b.textContent = 'Выдели и скопируй'; }
+    setTimeout(() => (b.textContent = 'Скопировать адрес'), 2000);
+  };
+
+  // Живые цифры с сервера.
+  const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  function days() {
+    const d = new Date(), ny = new Date(d.getFullYear() + 1, 0, 1);
+    if (d.getMonth() === 0 && d.getDate() <= 14) return '🎄 С Новым годом!';
+    const n = Math.ceil((ny - d) / 864e5);
+    return '🎄 До Нового года ' + n + ' ' + (n % 10 === 1 && n % 100 !== 11 ? 'день' : [2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'дня' : 'дней');
+  }
+  async function load() {
+    document.getElementById('ny').textContent = days();
+    try {
+      const s = await (await fetch('https://funland-stats.astravisuals.workers.dev/stats', { cache: 'no-store' })).json();
+      const on = s.online !== null && s.online !== undefined && !s.stale;
+      document.getElementById('dot').className = 'dot' + (on ? ' on' : '');
+      document.getElementById('online').textContent = on ? `Сервер работает · в игре ${s.online}${s.players && s.players.length ? ': ' + s.players.slice(0, 6).join(', ') : ''}` : 'Сервер сейчас выключен';
+      document.getElementById('next').textContent = on && s.next ? '⏳ ' + s.next : '⏳ События — когда сервер включён';
+      if (s.clans && s.clans.length) document.getElementById('clans').innerHTML = s.clans.map((c, i) => `<tr><td>${i + 1}. <b>[${esc(c.tag)}]</b> ${esc(c.name)}</td><td class="num">${c.points}</td></tr>`).join('');
+      if (s.killers && s.killers.length) document.getElementById('killers').innerHTML = s.killers.map((k, i) => `<tr><td>${i + 1}. ${esc(k.name)}</td><td class="num">${k.kills}</td></tr>`).join('');
+    } catch { document.getElementById('online').textContent = 'Не удалось узнать'; }
+  }
+  load(); setInterval(load, 60000);
+
+  // Снег. Меньше хлопьев на телефоне и при «меньше движения».
+  const cv = document.getElementById('snow'), cx = cv.getContext('2d');
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W, H, flakes = [];
+  function size() { W = cv.width = innerWidth; H = cv.height = innerHeight;
+    const n = calm ? 0 : Math.min(160, Math.round(W * H / 9000));
+    flakes = Array.from({ length: n }, () => ({ x: Math.random() * W, y: Math.random() * H, r: Math.random() * 2.2 + .6, s: Math.random() * .6 + .3, w: Math.random() * 6.28 })); }
+  addEventListener('resize', size); size();
+  (function tick() {
+    cx.clearRect(0, 0, W, H); cx.fillStyle = '#ffffffcc';
+    for (const f of flakes) { f.y += f.s; f.w += .01; f.x += Math.sin(f.w) * .3;
+      if (f.y > H) { f.y = -4; f.x = Math.random() * W; }
+      cx.beginPath(); cx.arc(f.x, f.y, f.r, 0, 6.28); cx.fill(); }
+    requestAnimationFrame(tick);
+  })();
+</script>
+</body>
+</html>
